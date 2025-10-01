@@ -1,0 +1,86 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: ansiblejobs.ansible.crdfy.sh
+spec:
+  group: ansible.crdfy.sh
+  names:
+    kind: AnsibleJob
+    listKind: AnsibleJobList
+    plural: ansiblejobs
+    singular: ansiblejob
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: AnsibleJob is the Schema for the ansiblejobs API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              ansible_extravars:
+                type: object
+                additionalProperties: true
+              inventory:
+                type: string
+              job_id:
+                type: string
+              play_name:
+                type: string
+              app_name:
+                type: string
+              playbook_name:
+                type: string
+              vault_jwt:
+                type: string
+              vault_url:
+                type: string
+              ansible_limit:
+                type: string
+              # request_timeout:
+              #   type: integer
+              #   description: Timeout in seconds to wait for a response when querying the API for the job status
+              # runner_image:
+              #   type: string
+              #   description: Runner image used when running jobs
+              # runner_version:
+              #   type: string
+              #   description: Runner image version used when running jobs
+              # runner_pull_policy:
+              #   type: string
+              #   description: Runner image pull policy used when running jobs
+              ansible_job_ttl:
+                description: Time to live for k8s job object after the playbook run has finished
+                type: integer
+              ansible_tags:
+                type: string
+                description: A comma-separated list of tags to specify which sets of ansible tasks in a job should be run
+              skip_tags:
+                type: string
+                description: A comma-separated list of tags to specify which sets of ansible tasks in a job should not be run
+            required:
+            description: Spec defines the desired state of AnsibleJob
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+          status:
+            description: Status defines the observed state of AnsibleJob
+            type: object
+            x-kubernetes-preserve-unknown-fields: true
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}

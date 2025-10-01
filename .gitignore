@@ -1,0 +1,17 @@
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin
+
+# editor and IDE paraphernalia
+.idea
+*.swp
+*.swo
+*~
+
+# private folders
+samples_with_secrets

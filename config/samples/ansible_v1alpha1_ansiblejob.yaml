@@ -1,0 +1,20 @@
+apiVersion: ansible.crdfy.sh/v1alpha1
+kind: AnsibleJob
+metadata:
+  labels:
+    app.kubernetes.io/name: crdfy
+    app.kubernetes.io/managed-by: kustomize
+  name: patching-job
+spec:
+  # TODO(user): Add fields here
+  extra_vars: 
+  inventory: inventories
+  play_name: patching.yml
+  app_name: businessApp1
+  job_id: id1
+  playbook_name: https://gitlab.lan/crdfy/ansible-playbook/-/archive/v0.0.3/ansible-playbook-v0.0.3.tar.gz
+  ansible_job_ttl: 3600
+  ansible_tags: 
+  skip_tags:
+  vault_jwt: 
+  vault_url: 

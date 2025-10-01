@@ -1,0 +1,77 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+  ##
+  ## Base operator rules
+  ##
+  - apiGroups:
+      - ""
+      - batch
+      - namespace
+    resources:
+      - secrets
+      - jobs
+      - jobs/exec
+      - jobs/log
+      - batch
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - daemonsets
+      - replicasets
+      - statefulsets
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  ##
+  ## Rules for ansible.crdfy.sh/v1alpha1, Kind: Inventory
+  ##
+  - apiGroups:
+      - ansible.crdfy.sh
+    resources:
+      - inventories
+      - inventories/status
+      - inventories/finalizers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  ##
+  ## Rules for ansible.crdfy.sh/v1alpha1, Kind: AnsibleJob
+  ##
+  - apiGroups:
+      - ansible.crdfy.sh
+    resources:
+      - ansiblejobs
+      - ansiblejobs/status
+      - ansiblejobs/finalizers
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+# +kubebuilder:scaffold:rules

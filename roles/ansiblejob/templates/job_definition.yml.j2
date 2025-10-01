@@ -1,0 +1,101 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: '{{ ansible_operator_meta.name }}'
+  namespace: '{{ ansible_operator_meta.namespace }}'
+spec:
+  ttlSecondsAfterFinished: {{ job_ttl }}
+  template: 
+    metadata: 
+      restartPolicy: Never
+    spec:
+      volumes:
+      - name: ansible-volume
+        emptyDir:
+          sizeLimit: 500Mi
+      - name: workdir-volume
+        emptyDir:
+          sizeLimit: 500Mi
+      - name: ssh-volume
+        emptyDir:
+          sizeLimit: 10Mi
+      containers:
+      - name: '{{ ansible_operator_meta.name }}'
+        volumeMounts:
+        - mountPath: /home/ansible/.ansible/
+          name: ansible-volume
+        - mountPath: /home/ansible/.ssh
+          name: ssh-volume
+        - mountPath: /workdir/
+          name: workdir-volume
+        image: galaxy.lan/ansible-runtime:latest
+        command: ["/bin/bash", "-c"]
+        securityContext:
+          allowPrivilegeEscalation: false 
+          readOnlyRootFilesystem: true
+          runAsNonRoot: true
+          runAsUser: 1001
+        env:
+        - name: ANSIBLE_HASHI_VAULT_ADDR
+          value:  "{{ vault_jwt | default('') }}"
+        - name: ANSIBLE_CONFIG
+          value: "/home/ansible/ansible.cfg"
+        - name: ANSIBLE_HASHI_VAULT_JWT
+          value:  "{{ vault_jwt | default('') }}"
+        - name: VAULT_ADDR
+          value: "{{ vault_url | default('') }}"
+        - name: VAULT_TOKEN
+          value:  "{{ vault_jwt | default('') }}"
+        - name: ANSIBLE_LIMIT
+          value:  "{{ ansible_limit | default('') }}"
+        - name: ANSIBLE_INVENTORY
+          value:  "{{ inventory | default('') }}"
+        - name: ANSIBLE_EXTRAVARS
+          value: "{{ ansible_extravars | default('') }}"
+        - name: ANSIBLE_PLAY
+          value: "{{ play_name | default('') }}"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://loki-gateway.meta.svc.cluster.local/"
+        - name: OTEL_EXPORTER_OTLP_TRACES_PROTOCOL
+          value: "http/protobuf"
+        - name: OTEL_EXPORTER_OTLP_HEADERS
+          value: "X-Scope-OrgId=foo"
+        - name: OTEL_SERVICE_NAME
+          value: "ansible"
+        - name: ANSIBLE_OPENTELEMETRY_ENABLED
+          value: "true"
+        - name: OTEL_EXPORTER_OTLP_INSECURE
+          value: "true"
+        args:
+          - echo "----------------------------------------------------------------" &&
+            echo "-------------------------- INITIALIZE --------------------------" &&
+            echo "----------------------------------------------------------------" &&
+            ansible-galaxy install -r requirements.yml  &&
+            cd /workdir/ &&
+            COMMAND=" -i $ANSIBLE_INVENTORY $ANSIBLE_PLAY " &&
+            echo " playbook  - $ANSIBLE_PLAY" && 
+            echo " inventory - $ANSIBLE_INVENTORY" &&
+            echo "Push JSON to file for easy ansible read" &&
+            echo "$ANSIBLE_EXTRAVARS" | sed "s/'/\"/g" > vars.json && 
+            cat vars.json &&
+            if [ -n "$ANSIBLE_LIMIT" ]; then echo "$ANSIBLE_LIMIT is defined"; COMMAND="$COMMAND --limit $ANSIBLE_LIMIT"; fi &&
+            if [ -n "$ANSIBLE_EXTRAVARS" ]; then echo "ANSIBLE_EXTRAVARS is defined"; COMMAND="$COMMAND --extra-vars @vars.json"; fi &&
+            echo "----------------------------------------------------------------" &&
+            echo "------------------------- DOWNLOADING --------------------------" &&
+            echo "----------------------------------------------------------------" &&
+            wget -q {{ playbook_name }} &&  
+            ansible-galaxy collection install community.general &&
+            tar --strip-components=1 -xvzf *.tar.gz > extraction.log &&
+            echo "----------------------------------------------------------------" &&
+            echo "--------------------------- STARTING ---------------------------" &&
+            echo "----------------------------------------------------------------" &&
+            echo "ansible-playbook $COMMAND" && 
+            echo "----------------------------------------------------------------" &&
+            ansible-playbook $COMMAND  &&
+            sleep 360
+
+          
+      restartPolicy: Never 
+  backoffLimit: 0
+#  backoffLimit: {{ backoff_limit }}

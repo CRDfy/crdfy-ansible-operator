@@ -1,0 +1,5 @@
+---
+# defaults file for AnsibleJob
+
+job_ttl: 3600
+backoff_limit: 1
