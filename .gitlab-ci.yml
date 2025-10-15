@@ -1,0 +1,48 @@
+variables:
+  COMPONENT_ID:
+    value: "crdfy"
+    description: "ID of project"
+
+  MAJOR: 
+    value: "1"
+    description: "Major version of playbook"
+
+  MINOR: 
+    value: "0"
+    description: "Minor version of playbook"
+
+  PATCH: 
+    value: "0"
+    description: "Minor version of playbook"
+
+
+stages:          # List of stages for jobs, and their order of execution
+  - build
+
+image:
+  name: galaxy.lan/ansible-runtime:latest
+
+run-job:
+   tags:
+    - shared
+   stage: run
+   script:
+     - ansible-galaxy collection build crdify/core --output-path ./dist/core --force 
+     - ansible-galaxy collection publish dist/core/* --token $GALAXY_API --server $GALAXY_URL
+   rules:
+    - changes:
+        paths:
+        - 'crdify/core/**/*'
+
+
+run-job2:
+   tags:
+    - shared
+   stage: run
+   script:
+     - ansible-galaxy collection build crdify/ops --output-path ./dist/ops --force 
+     - ansible-galaxy collection publish dist/ops/* --token $GALAXY_API --server $GALAXY_URL
+   rules:
+     - changes:
+        paths:
+          - 'crdify/ops/**/*'

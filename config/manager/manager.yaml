@@ -68,7 +68,7 @@ spec:
         env:
         - name: ANSIBLE_GATHERING
           value: explicit
-        - name: MAX_CONCURRENT_RECONCILES_ANSIBLEJOB_ANSIBLE_crdfy_SH
+        - name: MAX_CONCURRENT_RECONCILES_ANSIBLEJOB_ANSIBLE_CRDFY_SH
           value: "3"
         ports: []
         securityContext:
@@ -92,10 +92,10 @@ spec:
         # More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/
         resources:
           limits:
-            cpu: 500m
-            memory: 768Mi
+            cpu: 2000m
+            memory: 2Gi
           requests:
-            cpu: 10m
+            cpu: 100m
             memory: 256Mi
         volumeMounts: []
       imagePullSecrets:

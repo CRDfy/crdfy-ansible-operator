@@ -6,44 +6,6 @@
     that:
       - (job_id | default('') | length) or (workflow_template_name | default('') | length)
 
-- name: Read K8s job info
-  kubernetes.core.k8s_info:
-    kind: Job
-    api_version: batch/v1
-    name: "{{ ansible_operator_meta.name }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-  register: k8s_job
-
-####################################################################
-# Change the script in ""./files/api_client.py" to handle 
-# the return code appropriately
-#             0 == success
-#             1 == failed 
-####################################################################
-
-- name: call process script
-  ansible.builtin.script: "./files/api_client.py"
-  args:
-    executable: python3 
-  register: process
-  ignore_errors: true
-
-# Remove me 
-- debug:
-    var: process
-
-- name: Update AnsibleJob isFinished status if job succeeded 
-  operator_sdk.util.k8s_status:
-    api_version: ansible.crdfy.sh/v1alpha1
-    kind: AnsibleJob
-    name: "{{ ansible_operator_meta.name }}"
-    namespace: "{{ ansible_operator_meta.namespace }}"
-    status:
-      isFinished: true
-  when:
-    - k8s_job['resources'][0]['status']['succeeded'] is defined
-    - k8s_job['resources'][0]['status']['succeeded'] == 1
-
 - name: Read AnsibleJob info
   kubernetes.core.k8s_info:
     api_version: ansible.crdfy.sh/v1alpha1
@@ -58,6 +20,42 @@
   when:
     - ansiblejob_info['resources'][0]['status']['isFinished'] is defined
     - ansiblejob_info['resources'][0]['status']['isFinished']
+
+- name: Read K8s job info
+  kubernetes.core.k8s_info:
+    kind: Job
+    api_version: batch/v1
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+  register: k8s_job
+
+- name: Update AnsibleJob isFinished status if job succeeded 
+  operator_sdk.util.k8s_status:
+    api_version: ansible.crdfy.sh/v1alpha1
+    kind: AnsibleJob
+    name: "{{ ansible_operator_meta.name }}"
+    namespace: "{{ ansible_operator_meta.namespace }}"
+    status:
+      isFinished: true
+  when:
+    - k8s_job['resources'][0]['status']['succeeded'] is defined
+    - k8s_job['resources'][0]['status']['succeeded'] == 1
+
+
+
+####################################################################
+# Change the script in ""./files/api_client.py" to handle 
+# the return code appropriately
+#             0 == success
+#             1 == failed 
+####################################################################
+
+- name: call process script
+  ansible.builtin.script: "./files/api_client.py"
+  args:
+    executable: python3 
+  register: process
+  ignore_errors: true
 
 - block:
     - name: Check number of attempts to execute the job have been made
