@@ -1,0 +1,295 @@
+
+=== DIRECTORY TREE (max depth 3, source files only) ===
+.DS_Store
+.agents
+.agents/skills
+.agents/skills/acquire-codebase-knowledge
+.agents/skills/acquire-codebase-knowledge/SKILL.md
+.agents/skills/acquire-codebase-knowledge/assets
+.agents/skills/acquire-codebase-knowledge/references
+.agents/skills/acquire-codebase-knowledge/scripts
+.agents/skills/documentation-writer
+.agents/skills/documentation-writer/SKILL.md
+.gitignore
+.gitlab-ci.yml
+Dockerfile
+LICENSE
+Makefile
+PROJECT
+README.md
+ansible.cfg
+config
+config/crd
+config/crd/bases
+config/crd/bases/ansible.crdfy.sh_ansiblejobs.yaml
+config/crd/kustomization.yaml
+config/default
+config/default/kustomization.yaml
+config/default/manager_metrics_patch.yaml
+config/default/metrics_service.yaml
+config/manager
+config/manager/kustomization.yaml
+config/manager/manager.yaml
+config/manifests
+config/manifests/kustomization.yaml
+config/network-policy
+config/network-policy/allow-metrics-traffic.yaml
+config/network-policy/kustomization.yaml
+config/prometheus
+config/prometheus/kustomization.yaml
+config/prometheus/monitor.yaml
+config/rbac
+config/rbac/ansiblejob_admin_role.yaml
+config/rbac/ansiblejob_editor_role.yaml
+config/rbac/ansiblejob_viewer_role.yaml
+config/rbac/kustomization.yaml
+config/rbac/leader_election_role.yaml
+config/rbac/leader_election_role_binding.yaml
+config/rbac/metrics_auth_role.yaml
+config/rbac/metrics_auth_role_binding.yaml
+config/rbac/metrics_reader_role.yaml
+config/rbac/role.yaml
+config/rbac/role_binding.yaml
+config/rbac/service_account.yaml
+config/samples
+config/samples/ansible_v1alpha1_ansiblejob.yaml
+config/samples/kustomization.yaml
+config/scorecard
+config/scorecard/bases
+config/scorecard/bases/config.yaml
+config/scorecard/kustomization.yaml
+config/scorecard/patches
+config/scorecard/patches/basic.config.yaml
+config/scorecard/patches/olm.config.yaml
+config/testing
+config/testing/debug_logs_patch.yaml
+config/testing/kustomization.yaml
+config/testing/manager_image.yaml
+config/testing/pull_policy
+config/testing/pull_policy/Always.yaml
+config/testing/pull_policy/IfNotPresent.yaml
+config/testing/pull_policy/Never.yaml
+docs
+docs/codebase
+docs/codebase/.codebase-scan.txt
+docs/concept.excalidraw.png
+implementation_plan.md
+molecule
+molecule/default
+molecule/default/converge.yml
+molecule/default/create.yml
+molecule/default/destroy.yml
+molecule/default/kustomize.yml
+molecule/default/molecule.yml
+molecule/default/prepare.yml
+molecule/default/tasks
+molecule/default/tasks/ansiblejob_test.yml
+molecule/default/verify.yml
+molecule/kind
+molecule/kind/converge.yml
+molecule/kind/create.yml
+molecule/kind/destroy.yml
+molecule/kind/molecule.yml
+playbooks
+playbooks/.placeholder
+requirements.yml
+roles
+roles/.placeholder
+roles/ansiblejob
+roles/ansiblejob/README.md
+roles/ansiblejob/defaults
+roles/ansiblejob/defaults/main.yml
+roles/ansiblejob/files
+roles/ansiblejob/files/.placeholder
+roles/ansiblejob/files/api_client.py
+roles/ansiblejob/handlers
+roles/ansiblejob/handlers/main.yml
+roles/ansiblejob/meta
+roles/ansiblejob/meta/main.yml
+roles/ansiblejob/tasks
+roles/ansiblejob/tasks/main.yml
+roles/ansiblejob/templates
+roles/ansiblejob/templates/job_definition.yml.j2
+roles/ansiblejob/vars
+roles/ansiblejob/vars/main.yml
+samples_with_secrets
+samples_with_secrets/ansible_v1alpha1_ansiblejob_fail.yaml
+samples_with_secrets/ansible_v1alpha1_ansiblejob_working_extravars.yaml
+samples_with_secrets/ansible_v1alpha1_ansiblejob_working_limit.yaml
+samples_with_secrets/loadtest
+samples_with_secrets/loadtest/loadtest_1 copy 10.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 11.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 12.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 13.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 14.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 15.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 16.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 17.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 2.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 3.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 4.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 5.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 6.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 7.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 8.yaml
+samples_with_secrets/loadtest/loadtest_1 copy 9.yaml
+samples_with_secrets/loadtest/loadtest_1 copy.yaml
+samples_with_secrets/loadtest/loadtest_1.yaml
+watches.yaml
+
+=== STACK DETECTION (manifest files) ===
+
+--- Makefile ---
+# VERSION defines the project version for the bundle.
+# Update this value when you upgrade the version of your project.
+# To re-generate a bundle for another specific version without changing the standard setup, you can:
+# - use the VERSION as arg of the bundle target (e.g make bundle VERSION=0.0.2)
+# - use environment variables to overwrite this value (e.g export VERSION=0.0.2)
+VERSION ?= 0.0.1
+
+# CHANNELS define the bundle channels used in the bundle.
+# Add a new line here if you would like to change its default config. (E.g CHANNELS = "candidate,fast,stable")
+# To re-generate a bundle for other specific channels without changing the standard setup, you can:
+# - use the CHANNELS as arg of the bundle target (e.g make bundle CHANNELS=candidate,fast,stable)
+# - use environment variables to overwrite this value (e.g export CHANNELS="candidate,fast,stable")
+ifneq ($(origin CHANNELS), undefined)
+BUNDLE_CHANNELS := --channels=$(CHANNELS)
+endif
+
+# DEFAULT_CHANNEL defines the default channel used in the bundle.
+# Add a new line here if you would like to change its default config. (E.g DEFAULT_CHANNEL = "stable")
+# To re-generate a bundle for any other default channel without changing the default setup, you can:
+# - use the DEFAULT_CHANNEL as arg of the bundle target (e.g make bundle DEFAULT_CHANNEL=stable)
+# - use environment variables to overwrite this value (e.g export DEFAULT_CHANNEL="stable")
+ifneq ($(origin DEFAULT_CHANNEL), undefined)
+BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
+endif
+BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
+
+# IMAGE_TAG_BASE defines the docker.io namespace and part of the image name for remote images.
+# This variable is used to construct full image tags for bundle and catalog images.
+#
+# For example, running 'make bundle-build bundle-push catalog-build catalog-push' will build and push both
+# crdfy.sh/crdfy-bundle:$VERSION and crdfy.sh/crdfy-catalog:$VERSION.
+IMAGE_TAG_BASE ?= crdfy.sh/crdfy
+
+# BUNDLE_IMG defines the image:tag used for the bundle.
+# You can use it as an arg. (E.g make bundle-build BUNDLE_IMG=<some-registry>/<project-name-bundle>:<tag>)
+BUNDLE_IMG ?= $(IMAGE_TAG_BASE)-bundle:v$(VERSION)
+
+# BUNDLE_GEN_FLAGS are the flags passed to the operator-sdk generate bundle command
+BUNDLE_GEN_FLAGS ?= -q --overwrite --version $(VERSION) $(BUNDLE_METADATA_OPTS)
+
+# USE_IMAGE_DIGESTS defines if images are resolved via tags or digests
+# You can enable this value if you would like to use SHA Based Digests
+# To enable set flag to true
+USE_IMAGE_DIGESTS ?= false
+ifeq ($(USE_IMAGE_DIGESTS), true)
+	BUNDLE_GEN_FLAGS += --use-image-digests
+endif
+
+# Set the Operator SDK version to use. By default, what is installed on the system is used.
+# This is useful for CI or a project to utilize a specific version of the operator-sdk toolkit.
+OPERATOR_SDK_VERSION ?= v1.41.1
+
+# Image URL to use all building/pushing image targets
+IMG ?= controller:latest
+
+.PHONY: all
+all: docker-build
+
+##@ General
+
+# The help target prints out all targets with their descriptions organized
+# beneath their categories. The categories are represented by '##@' and the
+# target descriptions by '##'. The awk commands is responsible for reading the
+# entire set of makefiles included in this invocation, looking for lines of the
+# file as xyz: ## something, and then pretty-format the target and help. Then,
+# if there's a line with ##@ something, that gets pretty-printed as a category.
+# More info on the usage of ANSI control characters for terminal formatting:
+# https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_parameters
+# More info on the awk command:
+# http://linuxcommand.org/lc3_adv_awk.php
+
+.PHONY: help
+help: ## Display this help.
+	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z_0-9-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
+
+##@ Build
+
+.PHONY: run
+ANSIBLE_ROLES_PATH?="$(shell pwd)/roles"
+run: ansible-operator ## Run against the configured Kubernetes cluster in ~/.kube/config
+
+[TRUNCATED] Showing first 80 of 233 lines.
+
+=== ENTRY POINTS ===
+No common entry points found. Check 'main' or 'scripts.start' in manifest files above.
+
+=== LINTING AND FORMATTING CONFIG ===
+No linting or formatting config files found in project root.
+
+=== ENVIRONMENT VARIABLE TEMPLATES ===
+No .env.example or .env.template found. Identify required environment variables by searching the code and config for environment variable reads.
+
+=== TODO / FIXME / HACK (production code only, test dirs excluded) ===
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:28: TODO_LIMIT = 60
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:291: """Search for TODO/FIXME/HACK comments."""
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:293: patterns = ["TODO", "FIXME", "HACK"]
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:320: return todos[:TODO_LIMIT]
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:617: # TODOs
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:620: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", todos, output_file)
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py:622: print_section("TODO / FIXME / HACK (production code only, test dirs excluded)", ["None found."], output_file)
+
+=== GIT RECENT COMMITS (last 20) ===
+1add993 Merge branch 'gitlab' into 'master'
+f97fea2 role optimization
+3d5eff7 Initial commit
+
+=== HIGH-CHURN FILES (last 90 days, top 20) ===
+None found.
+
+=== MONOREPO SIGNALS ===
+No monorepo signals detected.
+
+=== CODE METRICS ===
+Total files scanned: 97
+Total lines of code: 747
+
+Files by language:
+  Other: 95
+  Python: 2
+
+Top 10 largest files:
+docs/concept.excalidraw.png: 114.0KB
+.agents/skills/acquire-codebase-knowledge/scripts/scan.py: 23.2KB
+.agents/skills/acquire-codebase-knowledge/SKILL.md: 9.1KB
+implementation_plan.md: 8.2KB
+roles/ansiblejob/tasks/main.yml: 5.9KB
+.agents/skills/acquire-codebase-knowledge/references/stack-detection.md: 5.5KB
+roles/ansiblejob/templates/job_definition.yml.j2: 4.1KB
+.agents/skills/acquire-codebase-knowledge/references/inquiry-checkpoints.md: 4.1KB
+config/crd/bases/ansible.crdfy.sh_ansiblejobs.yaml: 3.3KB
+config/manager/manager.yaml: 3.3KB
+
+=== CI/CD PIPELINES ===
+CI/CD: GitLab CI
+
+=== CONTAINERS & ORCHESTRATION ===
+Container: Docker found
+
+=== SECURITY & COMPLIANCE ===
+No security configs detected.
+
+=== PERFORMANCE & TESTING ===
+No performance testing configs detected.
+
+=== SCAN COMPLETE ===
